@@ -14,4 +14,7 @@ public class MyTokenizer extends CharTokenizer {
     protected boolean isTokenChar(int i) {
         return !Character.isSpaceChar(i);
     }
+    // "Lucene is an Information Retrieval library written in Java."
+    //        -  -  -           -         -       -       -  -
+    //[Lucene][is][an][information]
 }
