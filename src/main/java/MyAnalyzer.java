@@ -8,8 +8,14 @@ import java.io.Reader;
 public class MyAnalyzer extends Analyzer {
     @Override
     protected TokenStreamComponents createComponents(String s, Reader reader) {
-        Tokenizer letterTokenizer = new MyTokenizer(reader);
+        Tokenizer letterTokenizer = new MyTokenizer(reader); // split the string into terms based on what you want
+        // [lucene] [lucnen]
         TokenStream filter = new MyStopWordFilter(letterTokenizer);
-        return new TokenStreamComponents(letterTokenizer,filter);
+//        TokenStream secondStep = Operation(filter);
+        return new TokenStreamComponents(letterTokenizer, filter);
     }
+
+    //TODO write a test given a string return the terms => assert to be equal
+    //TODO given a LIST of Token apply analyzer to them => assert contains
+
 }
