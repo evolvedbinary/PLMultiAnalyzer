@@ -65,6 +65,8 @@ import java.util.List;
 class MyAnalyzerTest {
     Analyzer analyzer;
     Directory directory;
+    IndexReader indexReader;
+    IndexSearcher indexSearcher;
 
     MyAnalyzerTest() throws IOException {
         analyzer = new WhitespaceAnalyzer();
@@ -107,11 +109,14 @@ class MyAnalyzerTest {
         indexWriter.addDocument(doc);
         indexWriter.commit();
         indexWriter.close();
+        indexReader = DirectoryReader.open(directory);
+        indexSearcher = new IndexSearcher(indexReader);
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        Directory directory = new SimpleFSDirectory(new File("index"));
+        indexReader.close();
+        directory.close();
         IndexWriterConfig conf = new IndexWriterConfig(Version.LUCENE_4_10_4,analyzer);
         IndexWriter indexWriter = new IndexWriter(directory,conf);
         indexWriter.deleteAll();
@@ -127,8 +132,6 @@ class MyAnalyzerTest {
      *
      * */
     void BanquoShouldRturnDoc5() throws IOException, ParseException {
-        IndexReader indexReader = DirectoryReader.open(directory);
-        IndexSearcher indexSearcher = new IndexSearcher(indexReader);
         QueryParser parser = new QueryParser( "Text", analyzer);
         Query query = parser.parse("Banquo");
         TopDocs docs = indexSearcher.search(query,1000);
@@ -140,8 +143,6 @@ class MyAnalyzerTest {
             }
         }
         Assertions.assertTrue(includes);
-        indexReader.close();
-        directory.close();
     }
 
     @Test
@@ -150,8 +151,6 @@ class MyAnalyzerTest {
      *     • Results should include docs 2, 3, 5, and 6
      */
     void banquoWithAquoat() throws IOException, ParseException {
-        IndexReader indexReader = DirectoryReader.open(directory);
-        IndexSearcher indexSearcher = new IndexSearcher(indexReader);
         QueryParser parser = new QueryParser( "Text", analyzer);
         Query query = parser.parse("Banquo");
         TopDocs docs = indexSearcher.search(query,1000);
@@ -164,8 +163,6 @@ class MyAnalyzerTest {
         Assertions.assertTrue(docsMatched.contains("3"));
         Assertions.assertTrue(docsMatched.contains("5"));
         Assertions.assertTrue(docsMatched.contains("6"));
-        indexReader.close();
-        directory.close();
     }
 
     @Test
@@ -177,8 +174,6 @@ class MyAnalyzerTest {
         • doc 6 should score higher than doc 3 (prefer exact quote match even when case mis-matches)
      */
     void banquoCurlyQuote() throws IOException, ParseException {
-        IndexReader indexReader = DirectoryReader.open(directory);
-        IndexSearcher indexSearcher = new IndexSearcher(indexReader);
         QueryParser parser = new QueryParser( "Text", analyzer);
         Query query = parser.parse("Banquo’s");
         TopDocs docs = indexSearcher.search(query,1000);
@@ -193,8 +188,6 @@ class MyAnalyzerTest {
         Assertions.assertTrue(docsMatched.contains("3"));
         Assertions.assertTrue(docsMatched.contains("5"));
         Assertions.assertTrue(docsMatched.contains("6"));
-        indexReader.close();
-        directory.close();
     }
 
     @Test
@@ -203,8 +196,6 @@ class MyAnalyzerTest {
         * doc 2 (f-16) should score higher than doc 1 (f 16)
      */
     void F_16() throws IOException, ParseException {
-        IndexReader indexReader = DirectoryReader.open(directory);
-        IndexSearcher indexSearcher = new IndexSearcher(indexReader);
         QueryParser parser = new QueryParser( "Text", analyzer);
         Query query = parser.parse("f-16");
         TopDocs docs = indexSearcher.search(query,1000);
@@ -215,8 +206,6 @@ class MyAnalyzerTest {
         }
         Assertions.assertTrue(docsMatched.contains("2"));
         Assertions.assertTrue(docsMatched.contains("1"));
-        indexReader.close();
-        directory.close();
     }
 
     @Test
@@ -226,8 +215,6 @@ class MyAnalyzerTest {
         * doc 3 (F-16) should score higher than doc 4 (F 16) (prefer exact punctuation)
      */
     void capitalF_16() throws IOException, ParseException {
-        IndexReader indexReader = DirectoryReader.open(directory);
-        IndexSearcher indexSearcher = new IndexSearcher(indexReader);
         QueryParser parser = new QueryParser( "Text", analyzer);
         Query query = parser.parse("F-16");
         TopDocs docs = indexSearcher.search(query,1000);
@@ -240,8 +227,6 @@ class MyAnalyzerTest {
         Assertions.assertTrue(docsMatched.contains("1"));
         Assertions.assertTrue(docsMatched.contains("3"));
         Assertions.assertTrue(docsMatched.contains("4"));
-        indexReader.close();
-        directory.close();
     }
 
     @Test
@@ -266,8 +251,6 @@ class MyAnalyzerTest {
         Assertions.assertTrue(docsMatched.contains("5"));
         Assertions.assertTrue(docsMatched.contains("3"));
         Assertions.assertTrue(docsMatched.contains("6"));
-        indexReader.close();
-        directory.close();
     }
 
 
@@ -277,8 +260,6 @@ class MyAnalyzerTest {
         * doc 1 should score higher than doc 4
      */
     void Goa() throws IOException, ParseException {
-        IndexReader indexReader = DirectoryReader.open(directory);
-        IndexSearcher indexSearcher = new IndexSearcher(indexReader);
         QueryParser parser = new QueryParser( "Text", analyzer);
         Query query = parser.parse("Goa");
         TopDocs docs = indexSearcher.search(query,1000);
@@ -289,8 +270,6 @@ class MyAnalyzerTest {
         }
         Assertions.assertTrue(docsMatched.contains("1"));
         Assertions.assertTrue(docsMatched.contains("4"));
-        indexReader.close();
-        directory.close();
     }
 
     @Test
@@ -299,9 +278,6 @@ class MyAnalyzerTest {
         * doc 4 should score higher than doc 1
      */
     void GOA() throws IOException, ParseException {
-        IndexReader indexReader = DirectoryReader.open(directory);
-        IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-
         QueryParser parser = new QueryParser( "Text", analyzer);
         Query query = parser.parse("GOA");
         TopDocs docs = indexSearcher.search(query,1000);
@@ -315,9 +291,5 @@ class MyAnalyzerTest {
         Assertions.assertTrue(docsMatched.contains("1"));
         Assertions.assertTrue(docsMatched.contains("4"));
 //        Assertions.assertTrue(scores.get(3) > scores.get());
-
-        indexReader.close();
-        directory.close();
-        
     }
 }
