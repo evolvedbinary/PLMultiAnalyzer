@@ -1,7 +1,8 @@
+package com.lucene.example;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.core.LetterTokenizer;
 
 import java.io.Reader;
 

@@ -1,3 +1,5 @@
+package com.lucene.example;
+
 import org.apache.lucene.analysis.util.CharTokenizer;
 
 import java.io.Reader;
