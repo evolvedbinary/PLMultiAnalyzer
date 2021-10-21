@@ -2,6 +2,7 @@ package com.lucene.example;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 import java.io.IOException;
@@ -10,9 +11,9 @@ import java.util.List;
 
 public class LuceneTest {
     private static final String SAMPLE_TEXT
-            = "This is baeldung.com Lucene Analyzers test";
+            = "Lucene is an Information Retrieval library written in Java. lucene is an Information Retrieval library written in Java.";
     public static void main(String[] args) throws IOException {
-        List<String> result = analyze(SAMPLE_TEXT, new MyAnalyzer());
+        List<String> result = analyze(SAMPLE_TEXT, new WhitespaceAnalyzer());
         System.out.println(result);
     }
     public static List<String> analyze(String text, Analyzer analyzer) throws IOException {

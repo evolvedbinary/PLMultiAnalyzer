@@ -16,7 +16,4 @@ public class MyAnalyzer extends Analyzer {
         return new TokenStreamComponents(letterTokenizer, filter);
     }
 
-    //TODO write a test given a string return the terms => assert to be equal
-    //TODO given a LIST of Token apply analyzer to them => assert contains
-
 }

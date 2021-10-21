@@ -24,17 +24,25 @@ public class MyIndexWriter {
 
         // Document Creation
         Document doc = new Document();
-        String text1 = "Lucene is an Information Retrieval library written in Java."; // => [Lucene] [lucene]
+        String text1 = "Lucene is an Information Retrieval library written in Java. lucene is an Information Retrieval library written in Java."; // => [Lucene] [lucene]
         String text2 = "lucene is an Information Retrieval library written in Java.";
         String text3 = "Lucene's is an Information Retrieval library written in Java."; // => [Lucene's] [Lucene] [lucene's] [lucene]
         String text4 = "Lucenes is an Information Retrieval library written in Java.";
         doc.add(new TextField("fieldname", text1, Field.Store.YES));
-        doc.add(new TextField("fieldname", text2, Field.Store.YES));
-        doc.add(new TextField("fieldname", text3, Field.Store.YES));
-        doc.add(new TextField("fieldname", text4, Field.Store.YES));
-
-        // Adding Document to index
         indexWriter.addDocument(doc);
+//        doc = new Document();
+//        doc.add(new TextField("fieldname", text2, Field.Store.YES));
+//        // Adding Document to index
+//        indexWriter.addDocument(doc);
+//        doc = new Document();
+//        doc.add(new TextField("fieldname", text3, Field.Store.YES));
+//        // Adding Document to index
+//        indexWriter.addDocument(doc);
+//        doc = new Document();
+//        doc.add(new TextField("fieldname", text4, Field.Store.YES));
+//        // Adding Document to index
+//        indexWriter.addDocument(doc);
+
         indexWriter.close();
     }
 }

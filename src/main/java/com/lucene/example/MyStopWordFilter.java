@@ -9,7 +9,7 @@ import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import java.io.IOException;
 import java.util.Locale;
 
-public class MyStopWordFilter extends TokenFilter {
+public final class MyStopWordFilter extends TokenFilter {
     private CharTermAttribute charTermAtt;
     private PositionIncrementAttribute posIncrAtt;
     public MyStopWordFilter(TokenStream input) {
@@ -19,6 +19,8 @@ public class MyStopWordFilter extends TokenFilter {
     }
 
     //choosing what to filter
+    //[choosing] [what] [to] [filter]
+    //[what]
     @Override
     public boolean incrementToken() throws IOException {
         int extraIncrement = 0;
