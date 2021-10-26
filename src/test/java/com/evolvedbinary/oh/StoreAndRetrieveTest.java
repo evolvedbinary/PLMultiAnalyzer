@@ -164,7 +164,7 @@ public class StoreAndRetrieveTest {
 
     private static Analyzer newAnalyzer() {
         // TODO(AR) the analyzer is the bit we need to customise
-        return new StandardAnalyzer();
+        return new OhAnalyzer();
     }
 
     private static List<Document> asLuceneDocuments(final List<IdAndText> xmlDocumentsContents) {

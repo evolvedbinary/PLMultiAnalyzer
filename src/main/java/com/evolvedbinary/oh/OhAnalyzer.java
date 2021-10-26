@@ -19,6 +19,7 @@ public class OhAnalyzer extends Analyzer {
 
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
+//       The WhiteSpace tokenizer doesnt filter anything and also doesnt break on special characters
         final Tokenizer src = new WhitespaceTokenizer(reader);
 //        final ClassicTokenizer src = new St(reader);
 

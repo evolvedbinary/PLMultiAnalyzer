@@ -61,13 +61,24 @@ public final class OhFilter extends TokenFilter {
         if (!input.incrementToken()) {
             return false; // TODO(AR) we have tokens on the stack?
         }
-
-        final TypeAttribute typeAttr = input.getAttribute(TypeAttribute.class);
+//        this doesnt work with WhitespaceTokenizer
+//        final TypeAttribute typeAttr = input.getAttribute(TypeAttribute.class);
 //        if (StandardTokenizer.TOKEN_TYPES[StandardTokenizer.ALPHANUM].equals(typeAttr.type())) {
             // <ALPHANUM>
 
             final CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
             final String term = termAttr.toString();
+
+
+            //produce a lowerCase token
+
+            if(Character.isUpperCase(term.charAt(0))) {
+                if (this.extraWords == null) {
+                    this.extraWords = new ArrayList<>(1);
+                }
+                this.extraWords.add(term.toLowerCase());
+//                this.extraWords.add(term.toLowerCase());
+            }
 
             for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
                 // decompose the token into multiple tokens
