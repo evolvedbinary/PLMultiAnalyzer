@@ -38,6 +38,6 @@ public class OhAnalyzerTest {
             //TODO(AR) need to check the other attributes like position and not just the token!
         }
 
-        assertArrayEquals(new String[] { "banquo", "banquo's", "16", "f-16"  }, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "banquo", "banquo's", "16", "F-16"  }, tokens.toArray(new String[0]));
     }
 }

@@ -2,6 +2,7 @@ package com.evolvedbinary.oh;
 
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.standard.ClassicTokenizer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
@@ -20,7 +21,7 @@ public final class OhFilter extends TokenFilter {
     private final PositionIncrementAttribute posIncAtt = addAttribute(PositionIncrementAttribute.class);
 
     // TODO(AR) this doesn't yet handle extended Unicode punctuation!
-    private static final char[] PUNCTUATION_WORD_BOUNDARIES = { '\'' };
+    private static final char[] PUNCTUATION_WORD_BOUNDARIES = { '\'','-' };
 
     private List<String> extraWords = null;
     private State prevInputState;
@@ -62,7 +63,7 @@ public final class OhFilter extends TokenFilter {
         }
 
         final TypeAttribute typeAttr = input.getAttribute(TypeAttribute.class);
-        if (StandardTokenizer.TOKEN_TYPES[StandardTokenizer.ALPHANUM].equals(typeAttr.type())) {
+//        if (StandardTokenizer.TOKEN_TYPES[StandardTokenizer.ALPHANUM].equals(typeAttr.type())) {
             // <ALPHANUM>
 
             final CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
@@ -116,7 +117,7 @@ public final class OhFilter extends TokenFilter {
 
                 return true;
             }
-        }
+//        }
 
         return true;
     }

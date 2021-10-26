@@ -5,6 +5,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 import org.apache.lucene.analysis.standard.ClassicTokenizer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardFilter;
@@ -18,8 +19,8 @@ public class OhAnalyzer extends Analyzer {
 
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-//        final Tokenizer src = new OhTokenizer(reader);
-        final ClassicTokenizer src = new ClassicTokenizer(Version.LUCENE_4_10_4, reader);
+        final Tokenizer src = new WhitespaceTokenizer(reader);
+//        final ClassicTokenizer src = new St(reader);
 
 //        final TokenStream tok = new StandardFi
 
@@ -31,7 +32,7 @@ public class OhAnalyzer extends Analyzer {
         return new TokenStreamComponents(src, tok) {
             @Override
             protected void setReader(final Reader reader) throws IOException {
-                src.setMaxTokenLength(StandardAnalyzer.DEFAULT_MAX_TOKEN_LENGTH);
+//                src.setMaxTokenLength(StandardAnalyzer.DEFAULT_MAX_TOKEN_LENGTH);
                 super.setReader(reader);
             }
         };

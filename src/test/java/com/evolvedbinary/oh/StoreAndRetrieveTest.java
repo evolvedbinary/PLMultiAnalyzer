@@ -76,6 +76,7 @@ public class StoreAndRetrieveTest {
          */
     }
 
+
     private static void assertIncludesDocument(final String xmlDocument, final List<SearchResult> searchResults) {
         final IdAndText expectedIdAndText = extractIdAndText(xmlDocument).get(0);
         for (final SearchResult searchResult : searchResults) {
