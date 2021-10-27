@@ -28,7 +28,7 @@ public class OhAnalyzerTest {
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
         tokenStream.reset();
 
-        System.out.print(s+" produce: ");
+        System.out.print("\""+s+"\""+" produce: ");
 
         final List<String> tokens = new ArrayList<>();
         while (tokenStream.incrementToken()) {
@@ -43,7 +43,7 @@ public class OhAnalyzerTest {
 
         System.out.println();
 
-        assertArrayEquals(new String[] { "banquo", "banquo's", "f-16", "16" ,"F-16"  }, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "banquo's", "banquo", "16", "f-16" ,"F-16"  }, tokens.toArray(new String[0]));
     }
 
 
@@ -58,7 +58,7 @@ public class OhAnalyzerTest {
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
         tokenStream.reset();
 
-        System.out.print(s+" produce: ");
+        System.out.print("\""+s+"\""+" produce: ");
 
         final List<String> tokens = new ArrayList<>();
         while (tokenStream.incrementToken()) {
@@ -86,7 +86,7 @@ public class OhAnalyzerTest {
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
         tokenStream.reset();
 
-        System.out.print(s+" produce: ");
+        System.out.print("\""+s+"\""+" produce: ");
 
         final List<String> tokens = new ArrayList<>();
         while (tokenStream.incrementToken()) {
@@ -100,7 +100,7 @@ public class OhAnalyzerTest {
         }
         System.out.println();
 
-        assertArrayEquals(new String[] { "lucene", "Lucene"}, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "Lucene", "lucene"}, tokens.toArray(new String[0]));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class OhAnalyzerTest {
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
         tokenStream.reset();
 
-        System.out.print(s+" produce: ");
+        System.out.print("\""+s+"\""+" produce: ");
 
         final List<String> tokens = new ArrayList<>();
         while (tokenStream.incrementToken()) {
@@ -128,6 +128,35 @@ public class OhAnalyzerTest {
         }
         System.out.println();
 
-        assertArrayEquals(new String[] { "banqou", "banqou's"}, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "banqou's", "banqou"}, tokens.toArray(new String[0]));
+    }
+
+    @Test
+    public void UpperCasePunctuationWord() throws IOException {
+        String s = "Banqou's";
+        final Reader reader = new StringReader(s);
+
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
+
+        final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
+        tokenStream.reset();
+
+        System.out.print("\""+s+"\""+" produce: ");
+
+        final List<String> tokens = new ArrayList<>();
+        while (tokenStream.incrementToken()) {
+            final CharTermAttribute attr = tokenStream.getAttribute(CharTermAttribute.class);
+            final String token = attr.toString();
+            tokens.add(token);
+
+            System.out.print("["+token+"]");
+
+            //TODO(BH) need to check the other attributes like position and not just the token!
+        }
+        System.out.println();
+
+        //TODO(BH) consult Tom with what should be produced here
+        assertArrayEquals(new String[] { "Banqou", "banqou's" , "banqou", "Banqou's"}, tokens.toArray(new String[0]));
     }
 }

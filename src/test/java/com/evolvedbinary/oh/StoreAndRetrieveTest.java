@@ -53,7 +53,7 @@ public class StoreAndRetrieveTest {
      */
     @Test
     public void banquoSearchResultsIncludeBanquoRightSingleQuotationMarkS() throws ParseException, IOException {
-        final List<SearchResult> results = search("banquo");
+        final List<SearchResult> results = search("Banquo");
         assertIncludesDocument("<doc id=\"5\">(S) Banquo’s f16</doc>", results);
     }
 

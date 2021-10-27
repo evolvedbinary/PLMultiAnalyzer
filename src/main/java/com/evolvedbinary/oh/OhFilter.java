@@ -70,16 +70,6 @@ public final class OhFilter extends TokenFilter {
             final String term = termAttr.toString();
 
 
-            //produce a lowerCase token
-
-            if(Character.isUpperCase(term.charAt(0))) {
-                if (this.extraWords == null) {
-                    this.extraWords = new ArrayList<>(1);
-                }
-                this.extraWords.add(term.toLowerCase());
-//                this.extraWords.add(term.toLowerCase());
-            }
-
             for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
                 // decompose the token into multiple tokens
 
@@ -109,6 +99,37 @@ public final class OhFilter extends TokenFilter {
                 }
             }
 
+
+
+        //produce a lowerCase token
+
+        if(Character.isUpperCase(term.charAt(0))) {
+            if (this.extraWords == null) {
+                this.extraWords = new ArrayList<>(1);
+            }
+            this.extraWords.add(term.toLowerCase());
+
+            String lowerCaseWord = term.toLowerCase();
+
+            for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
+                // decompose the token into multiple tokens
+
+                // TODO(AR) doesn't handle Unicode yet
+
+                final int idx = lowerCaseWord.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
+                if (idx > -1) {
+                    // extract the words before and after the punctuation mark
+                    final String before = lowerCaseWord.substring(0, idx);
+                    final String after = lowerCaseWord.substring(idx + 1);
+
+                    // ignore words of 1 character
+                    if (before.length() > 1) {
+                        if (this.extraWords == null) {
+                            this.extraWords = new ArrayList<>(1);
+                        }
+                        this.extraWords.add(before);
+                    }
+
             if (this.extraWords != null) {
                 // we found some extra words we need to produce
                 this.prevInputState = input.captureState();
@@ -128,6 +149,20 @@ public final class OhFilter extends TokenFilter {
 
                 return true;
             }
+
+
+
+                    // ignore words of 1 character
+                    if (after.length() > 1) {
+                        if (this.extraWords == null) {
+                            this.extraWords = new ArrayList<>(1);
+                        }
+                        this.extraWords.add(after);
+                    }
+                }
+            }
+
+        }
 //        }
 
         return true;
