@@ -10,6 +10,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -76,6 +77,145 @@ public class StoreAndRetrieveTest {
          */
     }
 
+    /**
+     * • When searching for the term Banquo’s (curly quote)
+        • Results should include docs 2, 3, 5, and 6
+        • doc 5 should score higher than doc 2 (prefer exact quote match)
+        • doc 5 should score higher than doc 6 (prefer exact capitalisation match)
+        • doc 6 should score higher than doc 3 (prefer exact quote match even when case mis-matches)
+     */
+
+    @Test
+    public void banquetCurlyQuoteSearchResultsIncludeAllWithS() throws ParseException, IOException {
+        final List<SearchResult> results = search("Banquo’s");
+        assertIncludesDocument("<doc id=\"2\">(U) Banquo's S/S f-16</doc>", results);
+        assertIncludesDocument("<doc id=\"3\">(C) banquo's U.S.S.R. F-16</doc>", results);
+        assertIncludesDocument("<doc id=\"5\">(S) Banquo’s f16</doc>", results);
+        assertIncludesDocument("<doc id=\"6\">(S) banquo’s F16</doc>", results);
+
+        ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
+        docsScoreOrder.add(new DocScoreOrder(5,2));
+        docsScoreOrder.add(new DocScoreOrder(5,6));
+        docsScoreOrder.add(new DocScoreOrder(6,3));
+        assertScoreOrder(results, docsScoreOrder);
+    }
+
+    /**
+     • When searching for the term f-16
+        • doc 2 (f-16) should score higher than doc 1 (f 16)
+     */
+
+    @Test
+    public void f_16SearchResultsShouldPreferExactMatch() throws ParseException, IOException {
+        final List<SearchResult> results = search("f-16");
+        assertIncludesDocument("<doc id=\"2\">(U) Banquo's S/S f-16</doc>", results);
+        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);
+
+        ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
+        docsScoreOrder.add(new DocScoreOrder(2,1));
+        assertScoreOrder(results, docsScoreOrder);
+    }
+
+    /**
+     • When searching for the term F-16
+        • doc 3 (F-16) should score higher than doc 2 (f-16) (prefer case match)
+     */
+
+    @Test
+    public void F_16SearchResultsShouldPreferCaseMatch() throws ParseException, IOException {
+        final List<SearchResult> results = search("F-16");
+        assertIncludesDocument("<doc id=\"2\">(U) Banquo's S/S f-16</doc>", results);
+        assertIncludesDocument("<doc id=\"3\">(C) banquo's U.S.S.R. F-16</doc>", results);
+
+
+        ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
+        docsScoreOrder.add(new DocScoreOrder(3,2));
+        assertScoreOrder(results, docsScoreOrder);
+    }
+
+    /**
+     • When searching for the term F-16
+        • doc 3 (F-16) should score higher than doc 2 (f-16) (prefer case match)
+        • doc 3 (F-16) should score higher than doc 4 (F 16) (prefer exact punctuation)
+     */
+
+    @Test
+    public void F_16SearchResultsShouldPreferCaseAndPunctuation() throws ParseException, IOException {
+        final List<SearchResult> results = search("F-16");
+        assertIncludesDocument("<doc id=\"2\">(U) Banquo's S/S f-16</doc>", results);
+        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);
+        assertIncludesDocument("<doc id=\"3\">(C) banquo's U.S.S.R. F-16</doc>", results);
+
+
+        ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
+        docsScoreOrder.add(new DocScoreOrder(3,2));
+        docsScoreOrder.add(new DocScoreOrder(3,4));
+        assertScoreOrder(results, docsScoreOrder);
+    }
+
+
+    /**
+     • When searching for the term Goa
+        • doc 1 should score higher than doc 4
+     */
+
+    @Test
+    public void GoaSearchResultsShouldPreferCaseMatch() throws ParseException, IOException {
+        final List<SearchResult> results = search("Goa");
+        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);
+        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);
+
+        ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
+        docsScoreOrder.add(new DocScoreOrder(1,4));
+        assertScoreOrder(results, docsScoreOrder);
+    }
+
+    /**
+     • When searching for the term GOA
+     • doc 4 should score higher than doc 1
+     */
+
+    @Test
+    public void GOASearchResultsShouldPreferCaseMatch() throws ParseException, IOException {
+        final List<SearchResult> results = search("GOA");
+        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);
+        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);
+
+        ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
+        docsScoreOrder.add(new DocScoreOrder(4,1));
+        assertScoreOrder(results, docsScoreOrder);
+    }
+
+    /**
+    • When searching for the term s/s
+        • Lucene should not throw an error
+        • doc 2 (S/S) should score higher than docs 1, 5, and 6 ((S) marking secret classifications).
+        • doc 2 (S/S) should score higher than doc 3 (U.S.S.R.)
+    */
+    @Test
+    public void SAndSSearchResults() throws ParseException, IOException {
+        final List<SearchResult> results = search("s/s");
+        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);
+        assertIncludesDocument("<doc id=\"2\">(U) Banquo's S/S f-16</doc>", results);
+        assertIncludesDocument("<doc id=\"3\">(C) banquo's U.S.S.R. F-16</doc>", results);
+        assertIncludesDocument("<doc id=\"5\">(S) Banquo’s f16</doc>", results);
+        assertIncludesDocument("<doc id=\"6\">(S) banquo’s F16</doc>", results);
+
+        ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
+        docsScoreOrder.add(new DocScoreOrder(4,1));
+        assertScoreOrder(results, docsScoreOrder);
+    }
+
+    public static void assertScoreOrder(final List<SearchResult> searchResults,final ArrayList<DocScoreOrder> docsScoreOrder){
+        for(DocScoreOrder order: docsScoreOrder) {
+            float highScore = getScoreFromDocById(searchResults,order.highOrderDoc);
+            float lowScore = getScoreFromDocById(searchResults,order.lowOrderDoc);
+            if(!(highScore > lowScore)) {
+                fail("Scores arnt as expected for the documents: "+ order.toString());
+            }
+        }
+
+    }
 
     private static void assertIncludesDocument(final String xmlDocument, final List<SearchResult> searchResults) {
         final IdAndText expectedIdAndText = extractIdAndText(xmlDocument).get(0);
@@ -102,21 +242,36 @@ public class StoreAndRetrieveTest {
          • doc 6 should score higher than doc 3 (prefer exact quote match even when case mis-matches)
 
      • When searching for the term f-16
-     • doc 2 (f-16) should score higher than doc 1 (f 16)
+        • doc 2 (f-16) should score higher than doc 1 (f 16)
+
      • When searching for the term F-16
-     • doc 3 (F-16) should score higher than doc 2 (f-16) (prefer case match)
+        • doc 3 (F-16) should score higher than doc 2 (f-16) (prefer case match)
+
      • When searching for the term F-16
-     • doc 3 (F-16) should score higher than doc 2 (f-16) (prefer case match)
-     • doc 3 (F-16) should score higher than doc 4 (F 16) (prefer exact punctuation)
+        • doc 3 (F-16) should score higher than doc 2 (f-16) (prefer case match)
+        • doc 3 (F-16) should score higher than doc 4 (F 16) (prefer exact punctuation)
+
      • When searching for the term s/s
-     • Lucene should not throw an error
-     • doc 2 (S/S) should score higher than docs 1, 5, and 6 ((S) marking secret classifications).
-     • doc 2 (S/S) should score higher than doc 3 (U.S.S.R.)
+        • Lucene should not throw an error
+        • doc 2 (S/S) should score higher than docs 1, 5, and 6 ((S) marking secret classifications).
+        • doc 2 (S/S) should score higher than doc 3 (U.S.S.R.)
+
      • When searching for the term Goa
-     • doc 1 should score higher than doc 4
+        • doc 1 should score higher than doc 4
+
      • When searching for the term GOA
-     • doc 4 should score higher than doc 1
+        • doc 4 should score higher than doc 1
      */
+
+    private static float getScoreFromDocById(final List<SearchResult> searchResults, int docId){
+        for(SearchResult result : searchResults) {
+            if(result.idAndText.id == docId) {
+                return result.score;
+            }
+        }
+        fail("Search Results did not include XML Document with the Id: " + docId);
+        return 0;
+    }
 
     private static void storeDocuments(final String... xmlDocuments) throws IOException {
         final List<IdAndText> xmlDocumentsContents = extractIdAndText(xmlDocuments);
@@ -216,6 +371,21 @@ public class StoreAndRetrieveTest {
         public SearchResult(final IdAndText idAndText, final float score) {
             this.idAndText = idAndText;
             this.score = score;
+        }
+    }
+
+    private static class DocScoreOrder {
+        final int highOrderDoc;
+        final int lowOrderDoc;
+
+        public DocScoreOrder(final int highOrderDoc, final int lowOrderDoc) {
+            this.highOrderDoc = highOrderDoc;
+            this.lowOrderDoc = lowOrderDoc;
+        }
+
+        @Override
+        public String toString() {
+            return highOrderDoc + "," + lowOrderDoc ;
         }
     }
 

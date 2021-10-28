@@ -21,7 +21,7 @@ public final class OhFilter extends TokenFilter {
     private final PositionIncrementAttribute posIncAtt = addAttribute(PositionIncrementAttribute.class);
 
     // TODO(AR) this doesn't yet handle extended Unicode punctuation!
-    private static final char[] PUNCTUATION_WORD_BOUNDARIES = { '\'','-' };
+    private static final char[] PUNCTUATION_WORD_BOUNDARIES = { '\'','-','’'};
 
     private List<String> extraWords = null;
     private State prevInputState;
