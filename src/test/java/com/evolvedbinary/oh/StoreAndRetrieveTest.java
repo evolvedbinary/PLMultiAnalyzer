@@ -227,42 +227,6 @@ public class StoreAndRetrieveTest {
         fail("Search Results did not include XML Document: " + xmlDocument);
     }
 
-    /**
-     *
-     • When searching for the term Banquo
-        • Results should include doc 5 (Banquo’s with a curly quote)
-
-     • When searching for the term banquo's (straight quote)
-        • Results should include docs 2, 3, 5, and 6
-
-     • When searching for the term Banquo’s (curly quote)
-        • Results should include docs 2, 3, 5, and 6
-         • doc 5 should score higher than doc 2 (prefer exact quote match)
-         • doc 5 should score higher than doc 6 (prefer exact capitalisation match)
-         • doc 6 should score higher than doc 3 (prefer exact quote match even when case mis-matches)
-
-     • When searching for the term f-16
-        • doc 2 (f-16) should score higher than doc 1 (f 16)
-
-     • When searching for the term F-16
-        • doc 3 (F-16) should score higher than doc 2 (f-16) (prefer case match)
-
-     • When searching for the term F-16
-        • doc 3 (F-16) should score higher than doc 2 (f-16) (prefer case match)
-        • doc 3 (F-16) should score higher than doc 4 (F 16) (prefer exact punctuation)
-
-     • When searching for the term s/s
-        • Lucene should not throw an error
-        • doc 2 (S/S) should score higher than docs 1, 5, and 6 ((S) marking secret classifications).
-        • doc 2 (S/S) should score higher than doc 3 (U.S.S.R.)
-
-     • When searching for the term Goa
-        • doc 1 should score higher than doc 4
-
-     • When searching for the term GOA
-        • doc 4 should score higher than doc 1
-     */
-
     private static float getScoreFromDocById(final List<SearchResult> searchResults, int docId){
         for(SearchResult result : searchResults) {
             if(result.idAndText.id == docId) {
