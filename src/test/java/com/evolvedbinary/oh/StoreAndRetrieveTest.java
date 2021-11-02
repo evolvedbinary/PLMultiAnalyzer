@@ -153,17 +153,15 @@ public class StoreAndRetrieveTest {
         assertScoreOrder(results, docsScoreOrder);
     }
 
-
     /**
      • When searching for the term Goa
-        • doc 1 should score higher than doc 4
+     • doc 1 should score higher than doc 4
      */
-
     @Test
-    public void GoaSearchResultsShouldPreferCaseMatch() throws ParseException, IOException {
-        final List<SearchResult> results = search("Goa");
-        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);
-        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);
+    public void goaSearchResultsShouldPreferCaseMatch() throws ParseException, IOException {
+        final List<SearchResult> results = search("Goa");  // => [Goa, goa]
+        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);     // => [Goa, goa]
+        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);    // => [GOA, goa]
 
         ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
         docsScoreOrder.add(new DocScoreOrder(1,4));
@@ -174,16 +172,28 @@ public class StoreAndRetrieveTest {
      • When searching for the term GOA
      • doc 4 should score higher than doc 1
      */
-
     @Test
-    public void GOASearchResultsShouldPreferCaseMatch() throws ParseException, IOException {
-        final List<SearchResult> results = search("GOA");
-        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);
-        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);
+    public void goaSearchResultsShouldPreferCaseMatch_2() throws ParseException, IOException {
+        final List<SearchResult> results = search("GOA"); // => [GOA, goa]
+        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);     // => [Goa, goa]
+        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);    // => [GOA, goa]
 
         ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
         docsScoreOrder.add(new DocScoreOrder(4,1));
         assertScoreOrder(results, docsScoreOrder);
+    }
+
+    /**
+     • When searching for the term goa
+     • doc order is not important
+     */
+    @Test
+    public void goaSearchResultsShouldPreferCaseMatch_3() throws ParseException, IOException {
+        final List<SearchResult> results = search("goa");       // => [goa]
+        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);     // => [Goa, goa]
+        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);    // => [GOA, goa]
+
+        // NOTE: ignore score as could be either 1 first or 4 first
     }
 
     /**
@@ -211,7 +221,7 @@ public class StoreAndRetrieveTest {
             float highScore = getScoreFromDocById(searchResults,order.highOrderDoc);
             float lowScore = getScoreFromDocById(searchResults,order.lowOrderDoc);
             if(!(highScore > lowScore)) {
-                fail("Scores arnt as expected for the documents: "+ order.toString());
+                fail("Scores are not as expected for the documents: " + order.toString());
             }
         }
 
