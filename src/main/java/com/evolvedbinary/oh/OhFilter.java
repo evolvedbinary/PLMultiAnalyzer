@@ -48,7 +48,7 @@ public final class OhFilter extends TokenFilter {
         if (prevInputState != null) {
             input.restoreState(prevInputState);
             prevInputState = null;
-            return true;
+//            return true;
         }
 
         // can we get the next token from the source?
@@ -120,7 +120,6 @@ public final class OhFilter extends TokenFilter {
             }
 
         }
-//        }
 
         if (!extraTerms.isEmpty()) {
             // we found some extra terms we need to produce
@@ -128,14 +127,14 @@ public final class OhFilter extends TokenFilter {
             // record the current state, so we can restore it later
             this.prevInputState = input.captureState();
 
-            // output the first extra term
-            final String extraTerm = extraTerms.removeFirst();
-            termAtt.setEmpty().append(extraTerm);
+//            // output the first extra term
+//            final String extraTerm = extraTerms.removeFirst();
+//            termAtt.setEmpty().append(extraTerm);
             // TODO(AR) these need updating too!
             //offsetAtt.setOffset(token.startOffset, token.endOffset);
             //posIncAtt.setPositionIncrement(0);
 
-            return true;
+//            return true;
         }
 
         return true;

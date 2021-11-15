@@ -43,7 +43,7 @@ public class OhAnalyzerTest {
 
         System.out.println();
 
-        assertArrayEquals(new String[] { "banquo's", "banquo", "16", "f-16" ,"F-16"  }, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "banquo's", "banquo", "F-16", "16", "f-16"  }, tokens.toArray(new String[0]));
     }
 
 
@@ -100,7 +100,7 @@ public class OhAnalyzerTest {
         }
         System.out.println();
 
-        assertArrayEquals(new String[] { "Lucene", "lucene"}, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "Lucene", "lucene" }, tokens.toArray(new String[0]));
     }
 
     @Test
@@ -185,12 +185,12 @@ public class OhAnalyzerTest {
         System.out.println();
 
         //TODO(BH) consult Tom with what should be produced here
-        assertArrayEquals(new String[] { "Banqou", "banqou's" , "banqou", "Banqou's"}, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "Banqou's", "Banqou", "banqou's" , "banqou"}, tokens.toArray(new String[0]));
     }
 
     // TS,ts,(TS)
     @Test
-    public void breakets() throws IOException {
+    public void brackets() throws IOException {
         String s = "(TS)";
         final Reader reader = new StringReader(s);
 
@@ -215,7 +215,7 @@ public class OhAnalyzerTest {
         System.out.println();
 
         //TODO(BH) consult Tom with what should be produced here
-        assertArrayEquals(new String[] { "TS", "ts" , "(TS)"}, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "(TS)", "TS", "ts"}, tokens.toArray(new String[0]));
     }
 
     @Test
