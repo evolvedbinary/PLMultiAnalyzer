@@ -265,6 +265,11 @@ public class StoreAndRetrieveTest {
         try (final Analyzer analyzer = newAnalyzer()) {
 
             final QueryParser queryParser = new QueryParser(TEXT_FIELD_NAME, analyzer);
+
+            // TODO(AR) eXist-db uses AND by default, but Lucene normally uses OR by default
+            queryParser.setDefaultOperator(QueryParser.AND_OPERATOR);
+//            queryParser.setDefaultOperator(QueryParser.OR_OPERATOR);
+
             final Query query = queryParser.parse(queryString);
 
             return withDirectoryReader(indexDir, directoryReader -> {

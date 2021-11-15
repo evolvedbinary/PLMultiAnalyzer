@@ -29,17 +29,22 @@ public final class OhFilter extends TokenFilter {
     @Override
     public boolean incrementToken() throws IOException {
 
-        // do we have extra terms waiting to output
+        // do we have extra terms that we need to output
         if (!extraTerms.isEmpty()) {
             // output the first extra term
             final String extraTerm = extraTerms.removeFirst();
             termAtt.setEmpty().append(extraTerm);
 
-            // TODO(AR) do these need updating too?
-            //offsetAtt.setOffset(token.startOffset, token.endOffset);
+            /*
+                The PositionIncrementAttribute needs to be set to 0 on
+                subsequent decomposed terms, to indicate that it is a
+                stem of the original term.
+                See {@link org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute}
+             */
+            posIncAtt.setPositionIncrement(0);
 
-            // TODO(AR) experimental to try cause use of OR vs AND
-//            posIncAtt.setPositionIncrement(0);
+            // TODO(AR) does this need updating too?
+            //offsetAtt.setOffset(token.startOffset, token.endOffset);
 
             return true;
         }
@@ -48,24 +53,19 @@ public final class OhFilter extends TokenFilter {
         if (prevInputState != null) {
             input.restoreState(prevInputState);
             prevInputState = null;
-//            return true;
         }
 
         // can we get the next token from the source?
         if (!input.incrementToken()) {
             return false; // TODO(AR) we have tokens on the stack?
         }
-//        this doesnt work with WhitespaceTokenizer
-//        final TypeAttribute typeAttr = input.getAttribute(TypeAttribute.class);
-//        if (StandardTokenizer.TOKEN_TYPES[StandardTokenizer.ALPHANUM].equals(typeAttr.type())) {
-        // <ALPHANUM>
 
         final CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
         final String term = termAttr.toString();
 
 
         for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
-            // decompose the term into multiple tokens
+            // decompose the term into multiple terms
 
             // TODO(AR) doesn't handle Unicode yet
 
@@ -97,7 +97,7 @@ public final class OhFilter extends TokenFilter {
             extraTerms.add(lowerCaseTerm);
 
             for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
-                // decompose the term into multiple tokens
+                // decompose the term into multiple terms
 
                 // TODO(AR) doesn't handle Unicode yet
 
@@ -122,23 +122,24 @@ public final class OhFilter extends TokenFilter {
         }
 
         if (!extraTerms.isEmpty()) {
-            // we found some extra terms we need to produce
-
-            // record the current state, so we can restore it later
+            /*
+                As we found some extra terms that we will output,
+                on our next entry into this loop, record the current state,
+                so that we can restore it after we have output each extra terms
+             */
             this.prevInputState = input.captureState();
-
-//            // output the first extra term
-//            final String extraTerm = extraTerms.removeFirst();
-//            termAtt.setEmpty().append(extraTerm);
-            // TODO(AR) these need updating too!
-            //offsetAtt.setOffset(token.startOffset, token.endOffset);
-            //posIncAtt.setPositionIncrement(0);
-
-//            return true;
         }
+
+        /*
+            The PositionIncrementAttribute needs to be set to 1 on
+            the first/origin term.
+            See {@link org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute}
+         */
+        posIncAtt.setPositionIncrement(1);
+
+        // TODO(AR) does this need updating too?
+        //offsetAtt.setOffset(token.startOffset, token.endOffset);
 
         return true;
     }
 }
-
-//TODO(BH) make this into an actual app thats usable
