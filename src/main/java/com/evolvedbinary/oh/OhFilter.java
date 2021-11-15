@@ -29,9 +29,9 @@ public final class OhFilter extends TokenFilter {
     @Override
     public boolean incrementToken() throws IOException {
 
-        // do we have tokens waiting to output
+        // do we have extra terms waiting to output
         if (!extraTerms.isEmpty()) {
-            // output the first extra word
+            // output the first extra term
             final String extraTerm = extraTerms.removeFirst();
             termAtt.setEmpty().append(extraTerm);
 
@@ -65,22 +65,22 @@ public final class OhFilter extends TokenFilter {
 
 
         for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
-            // decompose the token into multiple tokens
+            // decompose the term into multiple tokens
 
             // TODO(AR) doesn't handle Unicode yet
 
             final int idx = term.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
             if (idx > -1) {
-                // extract the words before and after the punctuation word boundary
+                // extract the terms before and after the punctuation word boundary
                 final String before = term.substring(0, idx);
                 final String after = term.substring(idx + 1);
 
-                // ignore words of 1 character
+                // ignore terms of 1 character
                 if (before.length() > 1) {
                     extraTerms.add(before);
                 }
 
-                // ignore words of 1 character
+                // ignore terms of 1 character
                 if (after.length() > 1) {
                     extraTerms.add(after);
                 }
@@ -88,7 +88,7 @@ public final class OhFilter extends TokenFilter {
         }
 
 
-        //produce a lowerCase token
+        // produce a lowerCase term
 
         if (Character.isUpperCase(term.charAt(0))) {
 
@@ -97,22 +97,22 @@ public final class OhFilter extends TokenFilter {
             extraTerms.add(lowerCaseTerm);
 
             for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
-                // decompose the token into multiple tokens
+                // decompose the term into multiple tokens
 
                 // TODO(AR) doesn't handle Unicode yet
 
                 final int idx = lowerCaseTerm.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
                 if (idx > -1) {
-                    // extract the words before and after the punctuation word boundary
+                    // extract the terms before and after the punctuation word boundary
                     final String before = lowerCaseTerm.substring(0, idx);
                     final String after = lowerCaseTerm.substring(idx + 1);
 
-                    // ignore words of 1 character
+                    // ignore terms of 1 character
                     if (before.length() > 1) {
                         extraTerms.add(before);
                     }
 
-                    // ignore words of 1 character
+                    // ignore terms of 1 character
                     if (after.length() > 1) {
                         extraTerms.add(after);
                     }
@@ -123,12 +123,12 @@ public final class OhFilter extends TokenFilter {
 //        }
 
         if (!extraTerms.isEmpty()) {
-            // we found some extra words we need to produce
+            // we found some extra terms we need to produce
 
             // record the current state, so we can restore it later
             this.prevInputState = input.captureState();
 
-            // output the first extra word
+            // output the first extra term
             final String extraTerm = extraTerms.removeFirst();
             termAtt.setEmpty().append(extraTerm);
             // TODO(AR) these need updating too!
