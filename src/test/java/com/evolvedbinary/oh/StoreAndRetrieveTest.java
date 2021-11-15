@@ -1,7 +1,6 @@
 package com.evolvedbinary.oh;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntField;
@@ -10,7 +9,6 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -194,6 +192,21 @@ public class StoreAndRetrieveTest {
         assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);    // => [GOA, goa]
 
         // NOTE: ignore score as could be either 1 first or 4 first
+    }
+
+    /**
+     • When searching for the terms "Banquo Goa"
+     • doc 1 should score higher than doc 4
+     */
+    @Test
+    public void goaSearchResultsShouldPreferCaseMatch_4() throws ParseException, IOException {
+        final List<SearchResult> results = search("Banquo Goa");  // =>
+        assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);     // => [Goa, goa]
+        assertIncludesDocument("<doc id=\"4\">(TS) banquo GOA F 16</doc>", results);    // => [GOA, goa]
+
+        ArrayList<DocScoreOrder> docsScoreOrder = new ArrayList<>();
+        docsScoreOrder.add(new DocScoreOrder(1,4));
+        assertScoreOrder(results, docsScoreOrder);
     }
 
     /**
