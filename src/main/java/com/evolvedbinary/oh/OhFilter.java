@@ -63,62 +63,18 @@ public final class OhFilter extends TokenFilter {
         final CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
         final String term = termAttr.toString();
 
+        // create extra terms by decomposing the term on word boundaries
+        decomposePunctuationWordBoundaries(term);
 
-        for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
-            // decompose the term into multiple terms
-
-            // TODO(AR) doesn't handle Unicode yet
-
-            final int idx = term.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
-            if (idx > -1) {
-                // extract the terms before and after the punctuation word boundary
-                final String before = term.substring(0, idx);
-                final String after = term.substring(idx + 1);
-
-                // ignore terms of 1 character
-                if (before.length() > 1) {
-                    extraTerms.add(before);
-                }
-
-                // ignore terms of 1 character
-                if (after.length() > 1) {
-                    extraTerms.add(after);
-                }
-            }
-        }
-
-
-        // produce a lowerCase term
-
+        // if the term starts with an upper-case character, produce a lower-case term
         if (Character.isUpperCase(term.charAt(0))) {
-
             final String lowerCaseTerm = term.toLowerCase();
 
+            // add the lower-case term as an extra term
             extraTerms.add(lowerCaseTerm);
 
-            for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
-                // decompose the term into multiple terms
-
-                // TODO(AR) doesn't handle Unicode yet
-
-                final int idx = lowerCaseTerm.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
-                if (idx > -1) {
-                    // extract the terms before and after the punctuation word boundary
-                    final String before = lowerCaseTerm.substring(0, idx);
-                    final String after = lowerCaseTerm.substring(idx + 1);
-
-                    // ignore terms of 1 character
-                    if (before.length() > 1) {
-                        extraTerms.add(before);
-                    }
-
-                    // ignore terms of 1 character
-                    if (after.length() > 1) {
-                        extraTerms.add(after);
-                    }
-                }
-            }
-
+            // create extra terms by decomposing the lowerCaseTerm on word boundaries
+            decomposePunctuationWordBoundaries(lowerCaseTerm);
         }
 
         if (!extraTerms.isEmpty()) {
@@ -141,5 +97,37 @@ public final class OhFilter extends TokenFilter {
         //offsetAtt.setOffset(token.startOffset, token.endOffset);
 
         return true;
+    }
+
+    /**
+     * Decomposes a term into multiple additional terms
+     * by breaking up the term based on punctuation word boundaries.
+     * The additional terms are added to {@link #extraTerms}.
+     *
+     * @param term the term to decompose
+     */
+    private void decomposePunctuationWordBoundaries(final String term) {
+        for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
+            // decompose the term into multiple terms
+
+            // TODO(AR) doesn't handle Unicode yet
+
+            final int idx = term.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
+            if (idx > -1) {
+                // extract the terms before and after the punctuation word boundary
+                final String before = term.substring(0, idx);
+                final String after = term.substring(idx + 1);
+
+                // ignore terms of 1 character
+                if (before.length() > 1) {
+                    extraTerms.add(before);
+                }
+
+                // ignore terms of 1 character
+                if (after.length() > 1) {
+                    extraTerms.add(after);
+                }
+            }
+        }
     }
 }
