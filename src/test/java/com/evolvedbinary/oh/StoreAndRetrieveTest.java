@@ -217,7 +217,7 @@ public class StoreAndRetrieveTest {
     */
     @Test
     public void SAndSSearchResults() throws ParseException, IOException {
-        final List<SearchResult> results = search("s/s");
+        final List<SearchResult> results = search("s\\/s");
         assertIncludesDocument("<doc id=\"1\">(S) Banquo Goa f 16</doc>", results);
         assertIncludesDocument("<doc id=\"2\">(U) Banquo's S/S f-16</doc>", results);
         assertIncludesDocument("<doc id=\"3\">(C) banquo's U.S.S.R. F-16</doc>", results);
