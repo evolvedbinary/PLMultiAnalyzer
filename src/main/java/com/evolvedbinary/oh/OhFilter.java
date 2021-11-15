@@ -23,7 +23,7 @@ public final class OhFilter extends TokenFilter {
     // TODO(AR) this doesn't yet handle extended Unicode punctuation!
     private static final char[] PUNCTUATION_WORD_BOUNDARIES = { '\'', '-', '\u2019' };
 
-    private List<String> extraWords = null;
+    private List<String> extraWords = null;     //TODO(AR) replace with something from FastUtil, where we never make this null (to avoic GC), we just clear it
     private State prevInputState;
 
     public OhFilter(final Tokenizer src) {
@@ -77,7 +77,7 @@ public final class OhFilter extends TokenFilter {
 
             final int idx = term.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
             if (idx > -1) {
-                // extract the words before and after the punctuation mark
+                // extract the words before and after the punctuation word boundary
                 final String before = term.substring(0, idx);
                 final String after = term.substring(idx + 1);
 
@@ -103,23 +103,24 @@ public final class OhFilter extends TokenFilter {
         //produce a lowerCase token
 
         if (Character.isUpperCase(term.charAt(0))) {
+
+            final String lowerCaseTerm = term.toLowerCase();
+
             if (this.extraWords == null) {
                 this.extraWords = new ArrayList<>(1);
             }
-            this.extraWords.add(term.toLowerCase());
-
-            String lowerCaseWord = term.toLowerCase();
+            this.extraWords.add(lowerCaseTerm);
 
             for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
                 // decompose the token into multiple tokens
 
                 // TODO(AR) doesn't handle Unicode yet
 
-                final int idx = lowerCaseWord.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
+                final int idx = lowerCaseTerm.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
                 if (idx > -1) {
-                    // extract the words before and after the punctuation mark
-                    final String before = lowerCaseWord.substring(0, idx);
-                    final String after = lowerCaseWord.substring(idx + 1);
+                    // extract the words before and after the punctuation word boundary
+                    final String before = lowerCaseTerm.substring(0, idx);
+                    final String after = lowerCaseTerm.substring(idx + 1);
 
                     // ignore words of 1 character
                     if (before.length() > 1) {
@@ -131,6 +132,8 @@ public final class OhFilter extends TokenFilter {
 
                     if (this.extraWords != null) {
                         // we found some extra words we need to produce
+
+                        // record the current state, so we can restore it later
                         this.prevInputState = input.captureState();
 
 
