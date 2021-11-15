@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class OhAnalyzerTest {
 
+    private static final char[] PUNCTUATION_DICTIONARY = { '\'', '-', '\u2019' };
+    private static final int MINIMUM_TERM_LENGTH = 2;
+
     private static String TEXT_FIELD_NAME = "Text";
 
     @Test
@@ -22,7 +25,7 @@ public class OhAnalyzerTest {
         String s = "banquo's F-16";
         final Reader reader = new StringReader(s);
 
-        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
         final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
 
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
@@ -52,7 +55,7 @@ public class OhAnalyzerTest {
         String s = "lucene";
         final Reader reader = new StringReader(s);
 
-        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
         final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
 
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
@@ -80,7 +83,7 @@ public class OhAnalyzerTest {
         String s = "Lucene";
         final Reader reader = new StringReader(s);
 
-        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
         final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
 
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
@@ -108,7 +111,7 @@ public class OhAnalyzerTest {
         String s = "LUCENE";
         final Reader reader = new StringReader(s);
 
-        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
         final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
 
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
@@ -136,7 +139,7 @@ public class OhAnalyzerTest {
         String s = "banqou's";
         final Reader reader = new StringReader(s);
 
-        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
         final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
 
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
@@ -164,7 +167,7 @@ public class OhAnalyzerTest {
         String s = "Banqou's";
         final Reader reader = new StringReader(s);
 
-        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
         final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
 
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
@@ -194,7 +197,7 @@ public class OhAnalyzerTest {
         String s = "(TS)";
         final Reader reader = new StringReader(s);
 
-        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
         final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
 
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();
@@ -223,7 +226,7 @@ public class OhAnalyzerTest {
         String s = "S/S";
         final Reader reader = new StringReader(s);
 
-        final OhAnalyzer ohAnalyzer = new OhAnalyzer();
+        final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
         final Analyzer.TokenStreamComponents tokenStreamComponents = ohAnalyzer.createComponents(TEXT_FIELD_NAME, reader);
 
         final TokenStream tokenStream = tokenStreamComponents.getTokenStream();

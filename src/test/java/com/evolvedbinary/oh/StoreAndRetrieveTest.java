@@ -27,6 +27,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class StoreAndRetrieveTest {
 
+    private static final char[] PUNCTUATION_DICTIONARY = { '\'', '-', '\u2019' };
+    private static final int MINIMUM_TERM_LENGTH = 2;
+
     private static String ID_FIELD_NAME = "ID";
     private static String TEXT_FIELD_NAME = "Text";
 
@@ -310,8 +313,7 @@ public class StoreAndRetrieveTest {
     }
 
     private static Analyzer newAnalyzer() {
-        // TODO(AR) the analyzer is the bit we need to customise
-        return new OhAnalyzer();
+        return new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);
     }
 
     private static List<Document> asLuceneDocuments(final List<IdAndText> xmlDocumentsContents) {

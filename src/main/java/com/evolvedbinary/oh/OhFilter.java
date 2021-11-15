@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 
 import java.io.IOException;
@@ -12,18 +11,28 @@ import java.io.IOException;
 // TODO(AR) see CompoundWordTokenFilterBase --- COULD SIMPLIFY THIS?
 public final class OhFilter extends TokenFilter {
 
-    protected final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
-    protected final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
+    private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
+//    private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
     private final PositionIncrementAttribute posIncAtt = addAttribute(PositionIncrementAttribute.class);
 
-    // TODO(AR) this doesn't yet handle extended Unicode punctuation!
-    private static final char[] PUNCTUATION_WORD_BOUNDARIES = { '\'', '-', '\u2019' };
+    private final char[] punctuationDictionary;
+    private final int minimumTermLength;
 
     private final ObjectLinkedOpenHashSet<String> extraTerms = new ObjectLinkedOpenHashSet<>(4);
     private State prevInputState;
 
-    public OhFilter(final Tokenizer src) {
+    /**
+     * @param src the tokenizer
+     * @param punctuationDictionary the dictionary of punctuation to use
+     *     for decomposition.
+     * @param minimumTermLength the minimum length of any decomposed term,
+     *     any smaller decomposed terms will be discarded. Set to 0 to
+     *     indicate no minimum.
+     */
+    public OhFilter(final Tokenizer src, final char[] punctuationDictionary, final int minimumTermLength) {
         super(src);
+        this.punctuationDictionary = punctuationDictionary;
+        this.minimumTermLength = minimumTermLength;
     }
 
     @Override
@@ -107,24 +116,24 @@ public final class OhFilter extends TokenFilter {
      * @param term the term to decompose
      */
     private void decomposePunctuationWordBoundaries(final String term) {
-        for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
+        for (int i = 0; i < punctuationDictionary.length; i++) {
             // decompose the term into multiple terms
 
             // TODO(AR) doesn't handle Unicode yet
 
-            final int idx = term.indexOf(PUNCTUATION_WORD_BOUNDARIES[i]);
+            final int idx = term.indexOf(punctuationDictionary[i]);
             if (idx > -1) {
                 // extract the terms before and after the punctuation word boundary
                 final String before = term.substring(0, idx);
                 final String after = term.substring(idx + 1);
 
-                // ignore terms of 1 character
-                if (before.length() > 1) {
+                // ignore `before` terms that are shorter than minimumTermLength
+                if (before.length() >= minimumTermLength) {
                     extraTerms.add(before);
                 }
 
-                // ignore terms of 1 character
-                if (after.length() > 1) {
+                // ignore `after` terms that are shorter than minimumTermLength
+                if (after.length() >= minimumTermLength) {
                     extraTerms.add(after);
                 }
             }
