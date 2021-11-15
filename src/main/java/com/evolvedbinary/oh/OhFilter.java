@@ -1,17 +1,13 @@
 package com.evolvedbinary.oh;
 
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.standard.ClassicTokenizer;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 // TODO(AR) see CompoundWordTokenFilterBase --- COULD SIMPLIFY THIS?
 public final class OhFilter extends TokenFilter {
@@ -23,7 +19,7 @@ public final class OhFilter extends TokenFilter {
     // TODO(AR) this doesn't yet handle extended Unicode punctuation!
     private static final char[] PUNCTUATION_WORD_BOUNDARIES = { '\'', '-', '\u2019' };
 
-    private List<String> extraWords = null;     //TODO(AR) replace with something from FastUtil, where we never make this null (to avoic GC), we just clear it
+    private final ObjectLinkedOpenHashSet<String> extraWords = new ObjectLinkedOpenHashSet<>(4);
     private State prevInputState;
 
     public OhFilter(final Tokenizer src) {
@@ -34,18 +30,16 @@ public final class OhFilter extends TokenFilter {
     public boolean incrementToken() throws IOException {
 
         // do we have tokens waiting to output
-        if (extraWords != null) {
+        if (!extraWords.isEmpty()) {
             // output the first extra word
-            final String extraWord = extraWords.remove(0);
+            final String extraWord = extraWords.removeFirst();
             termAtt.setEmpty().append(extraWord);
-            // TODO(AR) these need updating too!
-            //offsetAtt.setOffset(token.startOffset, token.endOffset);
-            //posIncAtt.setPositionIncrement(0);
 
-            // clear memory if not needed
-            if (extraWords.isEmpty()) {
-                extraWords = null;
-            }
+            // TODO(AR) do these need updating too?
+            //offsetAtt.setOffset(token.startOffset, token.endOffset);
+
+            // TODO(AR) experimental to try cause use of OR vs AND
+//            posIncAtt.setPositionIncrement(0);
 
             return true;
         }
@@ -83,18 +77,12 @@ public final class OhFilter extends TokenFilter {
 
                 // ignore words of 1 character
                 if (before.length() > 1) {
-                    if (this.extraWords == null) {
-                        this.extraWords = new ArrayList<>(1);
-                    }
-                    this.extraWords.add(before);
+                    extraWords.add(before);
                 }
 
                 // ignore words of 1 character
                 if (after.length() > 1) {
-                    if (this.extraWords == null) {
-                        this.extraWords = new ArrayList<>(1);
-                    }
-                    this.extraWords.add(after);
+                    extraWords.add(after);
                 }
             }
         }
@@ -106,10 +94,7 @@ public final class OhFilter extends TokenFilter {
 
             final String lowerCaseTerm = term.toLowerCase();
 
-            if (this.extraWords == null) {
-                this.extraWords = new ArrayList<>(1);
-            }
-            this.extraWords.add(lowerCaseTerm);
+            extraWords.add(lowerCaseTerm);
 
             for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
                 // decompose the token into multiple tokens
@@ -124,47 +109,34 @@ public final class OhFilter extends TokenFilter {
 
                     // ignore words of 1 character
                     if (before.length() > 1) {
-                        if (this.extraWords == null) {
-                            this.extraWords = new ArrayList<>(1);
-                        }
-                        this.extraWords.add(before);
+                        extraWords.add(before);
                     }
-
-                    if (this.extraWords != null) {
-                        // we found some extra words we need to produce
-
-                        // record the current state, so we can restore it later
-                        this.prevInputState = input.captureState();
-
-
-                        // output the first extra word
-                        final String extraWord = extraWords.remove(0);
-                        termAtt.setEmpty().append(extraWord);
-                        // TODO(AR) these need updating too!
-                        //offsetAtt.setOffset(token.startOffset, token.endOffset);
-                        //posIncAtt.setPositionIncrement(0);
-
-                        // clear memory if not needed
-                        if (extraWords.isEmpty()) {
-                            extraWords = null;
-                        }
-
-                        return true;
-                    }
-
 
                     // ignore words of 1 character
                     if (after.length() > 1) {
-                        if (this.extraWords == null) {
-                            this.extraWords = new ArrayList<>(1);
-                        }
-                        this.extraWords.add(after);
+                        extraWords.add(after);
                     }
                 }
             }
 
         }
 //        }
+
+        if (!extraWords.isEmpty()) {
+            // we found some extra words we need to produce
+
+            // record the current state, so we can restore it later
+            this.prevInputState = input.captureState();
+
+            // output the first extra word
+            final String extraWord = extraWords.removeFirst();
+            termAtt.setEmpty().append(extraWord);
+            // TODO(AR) these need updating too!
+            //offsetAtt.setOffset(token.startOffset, token.endOffset);
+            //posIncAtt.setPositionIncrement(0);
+
+            return true;
+        }
 
         return true;
     }
