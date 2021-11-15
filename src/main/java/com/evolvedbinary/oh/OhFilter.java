@@ -19,7 +19,7 @@ public final class OhFilter extends TokenFilter {
     // TODO(AR) this doesn't yet handle extended Unicode punctuation!
     private static final char[] PUNCTUATION_WORD_BOUNDARIES = { '\'', '-', '\u2019' };
 
-    private final ObjectLinkedOpenHashSet<String> extraWords = new ObjectLinkedOpenHashSet<>(4);
+    private final ObjectLinkedOpenHashSet<String> extraTerms = new ObjectLinkedOpenHashSet<>(4);
     private State prevInputState;
 
     public OhFilter(final Tokenizer src) {
@@ -30,10 +30,10 @@ public final class OhFilter extends TokenFilter {
     public boolean incrementToken() throws IOException {
 
         // do we have tokens waiting to output
-        if (!extraWords.isEmpty()) {
+        if (!extraTerms.isEmpty()) {
             // output the first extra word
-            final String extraWord = extraWords.removeFirst();
-            termAtt.setEmpty().append(extraWord);
+            final String extraTerm = extraTerms.removeFirst();
+            termAtt.setEmpty().append(extraTerm);
 
             // TODO(AR) do these need updating too?
             //offsetAtt.setOffset(token.startOffset, token.endOffset);
@@ -77,12 +77,12 @@ public final class OhFilter extends TokenFilter {
 
                 // ignore words of 1 character
                 if (before.length() > 1) {
-                    extraWords.add(before);
+                    extraTerms.add(before);
                 }
 
                 // ignore words of 1 character
                 if (after.length() > 1) {
-                    extraWords.add(after);
+                    extraTerms.add(after);
                 }
             }
         }
@@ -94,7 +94,7 @@ public final class OhFilter extends TokenFilter {
 
             final String lowerCaseTerm = term.toLowerCase();
 
-            extraWords.add(lowerCaseTerm);
+            extraTerms.add(lowerCaseTerm);
 
             for (int i = 0; i < PUNCTUATION_WORD_BOUNDARIES.length; i++) {
                 // decompose the token into multiple tokens
@@ -109,12 +109,12 @@ public final class OhFilter extends TokenFilter {
 
                     // ignore words of 1 character
                     if (before.length() > 1) {
-                        extraWords.add(before);
+                        extraTerms.add(before);
                     }
 
                     // ignore words of 1 character
                     if (after.length() > 1) {
-                        extraWords.add(after);
+                        extraTerms.add(after);
                     }
                 }
             }
@@ -122,15 +122,15 @@ public final class OhFilter extends TokenFilter {
         }
 //        }
 
-        if (!extraWords.isEmpty()) {
+        if (!extraTerms.isEmpty()) {
             // we found some extra words we need to produce
 
             // record the current state, so we can restore it later
             this.prevInputState = input.captureState();
 
             // output the first extra word
-            final String extraWord = extraWords.removeFirst();
-            termAtt.setEmpty().append(extraWord);
+            final String extraTerm = extraTerms.removeFirst();
+            termAtt.setEmpty().append(extraTerm);
             // TODO(AR) these need updating too!
             //offsetAtt.setOffset(token.startOffset, token.endOffset);
             //posIncAtt.setPositionIncrement(0);
