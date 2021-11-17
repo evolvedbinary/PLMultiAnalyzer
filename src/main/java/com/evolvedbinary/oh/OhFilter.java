@@ -66,7 +66,7 @@ public final class OhFilter extends TokenFilter {
 
         // can we get the next token from the source?
         if (!input.incrementToken()) {
-            return false; // TODO(AR) we have tokens on the stack?
+            return false;
         }
 
         final CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
