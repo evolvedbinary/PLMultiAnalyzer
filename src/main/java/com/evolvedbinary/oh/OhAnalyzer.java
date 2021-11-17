@@ -1,5 +1,6 @@
 package com.evolvedbinary.oh;
 
+import it.unimi.dsi.fastutil.chars.CharArraySet;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
@@ -23,6 +24,20 @@ public class OhAnalyzer extends Analyzer {
         super();
         this.punctuationDictionary = punctuationDictionary;
         this.minimumTermLength = minimumTermLength;
+    }
+
+    /**
+     * @param punctuationDictionary the dictionary of punctuation to use
+     *     for decomposition.
+     * @param minimumTermLength the minimum length of any decomposed term,
+     *     any smaller decomposed terms will be discarded. Set to 0 to
+     *     indicate no minimum.
+     *
+     * @deprecated Use {@link #OhAnalyzer(char[], int)} instead
+     */
+    @Deprecated
+    public OhAnalyzer(final CharArraySet punctuationDictionary, final int minimumTermLength) {
+        this(punctuationDictionary.toCharArray(), minimumTermLength);
     }
 
     @Override
