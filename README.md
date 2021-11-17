@@ -63,7 +63,14 @@ when creating the index config specify the `Analyzer` as `com.evolvedbinary.oh.O
     <index xmlns:wiki="http://exist-db.org/xquery/wiki" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:atom="http://www.w3.org/2005/Atom">
         <!-- Lucene index is configured below -->
         <lucene>
-	        <analyzer class="com.evolvedbinary.oh.OhAnalyzer"/>
+	        <analyzer class="com.evolvedbinary.oh.OhAnalyzer">
+                <param name="minimumTermLength" type="int" value="2" />
+                <param name="punctuationDictionary" type="org.apache.lucene.analysis.util.CharArraySet">
+                    <value>'</value>
+                    <value>-</value>
+                    <value>’</value>
+                </param>
+            <analyzer>
 	        <text qname="doc"/>
         </lucene>
     </index>
