@@ -26,7 +26,7 @@ $ cp analyzer-jar.jar  $EXIST_HOME/exist-distribution/target/exist-distribution-
 
 **Windows:** 
 ```cmd
-$ copy analyzer-jar.jar  $EXIST_HOME\exist-distribution\target\exist-distribution-[version]-dir\lib
+$ copy analyzer-jar.jar  %EXIST_HOME%\exist-distribution\target\exist-distribution-[version]-dir\lib
 ```
 
 ## Add the analyzer dependency in exist start up script
@@ -58,6 +58,10 @@ $ %EXIST_HOME%\exist-distribution\target\exist-distribution-[version]-dir\bin\st
 
 ## Index The data using the custom Analyzer
 when creating the index config specify the `Analyzer` as `com.evolvedbinary.oh.OhAnalyzer`
+the `Analyzer` needs two parameters
+* `minimumTermLength`: the minimum length of any decomposed term, any smaller decomposed terms will be discarded. Set to 0 to indicate no minimum.
+* `punctuationDictionary`:  the dictionary of punctuation to use for decomposition.
+
 ```xml
 <collection xmlns="http://exist-db.org/collection-config/1.0">
     <index xmlns:wiki="http://exist-db.org/xquery/wiki" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:atom="http://www.w3.org/2005/Atom">
