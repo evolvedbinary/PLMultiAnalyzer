@@ -1,4 +1,4 @@
-package com.evolvedbinary.oh;
+package com.evolvedbinary.lucene.analyzer;
 
 import com.evolvedbinary.j8fu.function.ConsumerE;
 import com.evolvedbinary.j8fu.function.FunctionE;

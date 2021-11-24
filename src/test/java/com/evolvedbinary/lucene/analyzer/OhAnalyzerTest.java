@@ -1,4 +1,4 @@
-package com.evolvedbinary.oh;
+package com.evolvedbinary.lucene.analyzer;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;

@@ -1,4 +1,4 @@
-package com.evolvedbinary.oh;
+package com.evolvedbinary.lucene.analyzer;
 
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import org.apache.lucene.analysis.TokenFilter;

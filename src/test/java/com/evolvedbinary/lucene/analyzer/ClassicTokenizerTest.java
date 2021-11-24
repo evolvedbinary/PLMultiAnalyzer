@@ -1,5 +1,6 @@
-package com.evolvedbinary.oh;
+package com.evolvedbinary.lucene.analyzer;
 
+import org.apache.lucene.analysis.standard.ClassicTokenizer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.junit.jupiter.api.Test;
@@ -12,18 +13,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class StandardTokenizerTest {
+public class ClassicTokenizerTest {
 
     @Test
     public void test1() throws IOException {
         final Reader reader = new StringReader("banquo's F-16");
 
-        final StandardTokenizer standardTokenizer = new StandardTokenizer(reader);
-        standardTokenizer.reset();
+        final ClassicTokenizer classicTokenizer = new ClassicTokenizer(reader);
+        classicTokenizer.reset();
 
         final List<String> tokens = new ArrayList<>();
-        while (standardTokenizer.incrementToken()) {
-            final CharTermAttribute attr = standardTokenizer.getAttribute(CharTermAttribute.class);
+        while (classicTokenizer.incrementToken()) {
+            final CharTermAttribute attr = classicTokenizer.getAttribute(CharTermAttribute.class);
             final String token = attr.toString();
             tokens.add(token);
 
@@ -32,6 +33,7 @@ public class StandardTokenizerTest {
             //TODO(AR) need to check the other attributes like position and not just the token!
         }
 
-        assertArrayEquals(new String[] { "banquo", "banquo's", "16", "f-16"  }, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "banquo's", "F-16"  }, tokens.toArray(new String[0]));
     }
+
 }
