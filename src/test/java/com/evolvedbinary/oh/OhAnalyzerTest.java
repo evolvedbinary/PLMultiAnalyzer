@@ -239,8 +239,7 @@ public class OhAnalyzerTest {
         }
         System.out.println();
 
-        //TODO(BH) consult Tom with what should be produced here
-        assertArrayEquals(new String[] { "(TS)", "TS", "ts"}, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "(TS)"}, tokens.toArray(new String[0]));
     }
 
     @Test
@@ -267,8 +266,6 @@ public class OhAnalyzerTest {
             //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
-
-        //TODO(BH) consult Tom with what should be produced here
-        assertArrayEquals(new String[] { "Banqou", "banqou's" , "banqou", "Banqou's"}, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "S/S", "s/s" }, tokens.toArray(new String[0]));
     }
 }
