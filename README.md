@@ -36,9 +36,9 @@ in your `$EXIST_HOME/exist-distribution/target/exist-distribution-[version]-dir/
 <dependencies>
     ... <!-- other dependencies -->
     <dependency>
-        <groupId>org.evoledbinary.com</groupId>
+        <groupId>com.evolvedbinary.lucene.analyzer</groupId>
         <artifactId>ohAnalyzer</artifactId> 
-        <version>1.0.0</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>analyzer-jar.jar</relativePath> <!-- must be exact match to the jar in lib folder -->
     </dependency>
     ... <!-- other dependencies -->

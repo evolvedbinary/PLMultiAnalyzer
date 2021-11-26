@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.evolvedbinary.lucene.analyzer</groupId>
-    <artifactId>lucene-example</artifactId>
+    <artifactId>OhAnalyzer</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <inceptionYear>2021</inceptionYear>
