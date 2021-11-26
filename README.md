@@ -57,7 +57,7 @@ $ %EXIST_HOME%\exist-distribution\target\exist-distribution-[version]-dir\bin\st
 ```
 
 ## Index The data using the custom Analyzer
-when creating the index config specify the `Analyzer` as `OhAnalyzer`
+when creating the index config specify the `Analyzer` as `com.evolvedbinary.lucene.analyzer.OhAnalyzer`
 the `Analyzer` needs two parameters
 * `minimumTermLength`: the minimum length of any decomposed term, any smaller decomposed terms will be discarded. Set to 0 to indicate no minimum.
 * `punctuationDictionary`:  the dictionary of punctuation to use for decomposition.
@@ -67,7 +67,7 @@ the `Analyzer` needs two parameters
     <index xmlns:wiki="http://exist-db.org/xquery/wiki" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:atom="http://www.w3.org/2005/Atom">
         <!-- Lucene index is configured below -->
         <lucene>
-	        <analyzer class="OhAnalyzer">
+	        <analyzer class="com.evolvedbinary.lucene.analyzer.OhAnalyzer">
                 <param name="minimumTermLength" type="int" value="2" />
                 <param name="punctuationDictionary" type="org.apache.lucene.analysis.util.CharArraySet">
                     <value>'</value>
