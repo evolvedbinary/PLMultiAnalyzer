@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.evolvedbinary.oh;
+package com.evolvedbinary.lucene.analyzer;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -44,8 +44,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.evolvedbinary.oh.LuceneHof.withDirectoryReader;
-import static com.evolvedbinary.oh.LuceneHof.withIndexWriter;
+import static com.evolvedbinary.lucene.analyzer.LuceneHof.withDirectoryReader;
+import static com.evolvedbinary.lucene.analyzer.LuceneHof.withIndexWriter;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class StoreAndRetrieveTest {

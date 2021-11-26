@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.evolvedbinary.oh;
+package com.evolvedbinary.lucene.analyzer;
 
 import it.unimi.dsi.fastutil.chars.CharArraySet;
 import org.apache.lucene.analysis.Analyzer;
