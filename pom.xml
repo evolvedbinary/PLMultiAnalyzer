@@ -38,6 +38,10 @@
         <name>Evolved Binary</name>
     </organization>
 
+    <scm>
+        <developerConnection>scm:git:https://github.com/evolvedbinary/PLMultiAnalyzer</developerConnection>
+    </scm>
+
     <licenses>
         <license>
             <name>MIT License</name>
