@@ -38,6 +38,10 @@
         <name>Evolved Binary</name>
     </organization>
 
+    <scm>
+        <developerConnection>scm:git:https://github.com/evolvedbinary/PLMultiAnalyzer</developerConnection>
+    </scm>
+
     <licenses>
         <license>
             <name>MIT License</name>
@@ -155,6 +159,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0-M5</version>
             </plugin>
         </plugins>
     </build>
