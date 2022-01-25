@@ -1,3 +1,12 @@
+PLMultiAnalyzer
+===============
+A Lucene custom analyzer that allow for indexing multiple tokens for a single term 
+it supports storing terms with Mixed-case letters and terms with punctuations, This in theory should produce more accurate results as it making Lucene doing more Exact match search.
+
+Released under the [MIT License](https://opensource.org/licenses/MIT).
+
+[![CI](https://github.com/digital-preservation/utf8-validator/workflows/CI/badge.svg)](https://github.com/evolvedbinary/PLMultiAnalyzer/actions/workflows/ci.yaml?query=workflow%3ACI)
+[![Maven Central]()]()
 # Adding a Custom analyzer to exist-db
 
 ## 1.Building eXist-db
