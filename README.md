@@ -1,7 +1,7 @@
 PLMultiAnalyzer
 ===============
 A Lucene custom analyzer that allow for indexing multiple tokens for a single term 
-it supports storing terms with Mixed-case letters and terms with punctuations, This in theory should produce more accurate results as it making Lucene doing more Exact match search.
+it supports storing terms with Mixed-case letters and terms with punctuation. This in theory should produce more accurate results as it causes Lucene to perform a more exact search.
 
 Released under the [MIT License](https://opensource.org/licenses/MIT).
 
