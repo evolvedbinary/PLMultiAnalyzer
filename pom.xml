@@ -29,9 +29,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.evolvedbinary.lucene.analyzer</groupId>
-    <artifactId>OhAnalyzer</artifactId>
+    <artifactId>PLMultiAnalyzer</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-
+    <description>A Lucene custom analyzer that allow for indexing multiple tokens for a single term</description>
+    <url>https://github.com/evolvedbinary/PLMultiAnalyzer</url>
     <inceptionYear>2021</inceptionYear>
 
     <organization>
@@ -50,6 +51,12 @@
         </license>
     </licenses>
 
+    <scm>
+        <connection>scm:git:https://github.com/evolvedbinary/PLMultiAnalyzer.git</connection>
+        <developerConnection>scm:git:https://github.com/evolvedbinary/PLMultiAnalyzer.git</developerConnection>
+        <url>scm:git:https://github.com/evolvedbinary/PLMultiAnalyzer.git</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -96,6 +103,28 @@
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Build-Tag>${build-tag}</Build-Tag>
+                            <Git-Commit>${build-commit}</Git-Commit>
+                            <Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
+                            <Build-Version>${build-version}</Build-Version>
+                            <Build-Timestamp>${build-tstamp}</Build-Timestamp>
+                            <Source-Repository>${project.scm.connection}</Source-Repository>
+                            <Description>${project.description}</Description>
+                            <Implementation-URL>${project.url}</Implementation-URL>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
