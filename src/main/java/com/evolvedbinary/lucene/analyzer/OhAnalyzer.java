@@ -22,14 +22,16 @@
  */
 package com.evolvedbinary.lucene.analyzer;
 
-import it.unimi.dsi.fastutil.chars.CharArraySet;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
+import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.util.Version;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Set;
 
 public class OhAnalyzer extends Analyzer {
     private final char[] punctuationDictionary;
@@ -54,13 +56,22 @@ public class OhAnalyzer extends Analyzer {
      * @param minimumTermLength the minimum length of any decomposed term,
      *     any smaller decomposed terms will be discarded. Set to 0 to
      *     indicate no minimum.
-     *
-     * @deprecated Use {@link #OhAnalyzer(char[], int)} instead
      */
-    @Deprecated
-    public OhAnalyzer(final CharArraySet punctuationDictionary, final int minimumTermLength) {
-        this(punctuationDictionary.toCharArray(), minimumTermLength);
+    public OhAnalyzer(final Integer minimumTermLength, final Set<Character> punctuationDictionary) {
+        super();
+        this.punctuationDictionary =punctuationDictionary.toString().toCharArray();
+        this.minimumTermLength = minimumTermLength;
     }
+    /**
+     * when no params are provided the default ones will be used 
+     */
+    public OhAnalyzer() {
+        super();
+        this.punctuationDictionary = new char[]{'\'', '-', '\u2019'};;
+        this.minimumTermLength = 2;
+    }
+
+
 
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {

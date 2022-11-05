@@ -76,15 +76,16 @@ the `Analyzer` needs two parameters
     <index xmlns:wiki="http://exist-db.org/xquery/wiki" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:atom="http://www.w3.org/2005/Atom">
         <!-- Lucene index is configured below -->
         <lucene>
-	        <analyzer class="com.evolvedbinary.lucene.analyzer.OhAnalyzer">
-                <param name="minimumTermLength" type="int" value="2" />
-                <param name="punctuationDictionary" type="org.apache.lucene.analysis.util.CharArraySet">
+	        <analyzer id="cus" class="com.evolvedbinary.lucene.analyzer.OhAnalyzer">
+                <param name="minimumTermLength" type="java.lang.Integer" value="2" />
+                <param name="punctuationDictionary" type="java.util.Set">
                     <value>'</value>
                     <value>-</value>
-                    <value>’</value>
+                    <value>’</value> 
+                    <value>_</value>
                 </param>
-            <analyzer>
-	        <text qname="doc"/>
+            </analyzer>
+            <text qname="SAMPLE" analyzer="cus"/>
         </lucene>
     </index>
 </collection>
