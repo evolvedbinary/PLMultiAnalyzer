@@ -81,8 +81,7 @@ the `Analyzer` needs two parameters
                 <param name="punctuationDictionary" type="java.util.Set">
                     <value>'</value>
                     <value>-</value>
-                    <value>’</value> 
-                    <value>_</value>
+                    <value>’</value>
                 </param>
             </analyzer>
             <text qname="SAMPLE" analyzer="cus"/>
