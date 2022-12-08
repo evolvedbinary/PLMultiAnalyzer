@@ -239,7 +239,7 @@ public class OhAnalyzerTest {
         }
         System.out.println();
 
-        assertArrayEquals(new String[] { "(TS)"}, tokens.toArray(new String[0]));
+        assertArrayEquals(new String[] { "(TS)", "(ts)"}, tokens.toArray(new String[0]));
     }
 
     @Test
