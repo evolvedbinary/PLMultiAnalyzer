@@ -27,6 +27,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.junit.jupiter.api.Test;
 
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -43,7 +44,7 @@ public class OhAnalyzerTest {
     private static String TEXT_FIELD_NAME = "Text";
 
     @Test
-    public void wordSplitTest() throws IOException {
+    public void testWordSplitTest() throws IOException {
         String s = "banquo's F-16";
         final Reader reader = new StringReader(s);
 
@@ -73,7 +74,7 @@ public class OhAnalyzerTest {
 
 
     @Test
-    public void lowerCaseWord() throws IOException {
+    public void testLowerCaseWord() throws IOException {
         String s = "lucene";
         final Reader reader = new StringReader(s);
 
@@ -101,7 +102,7 @@ public class OhAnalyzerTest {
     }
 
     @Test
-    public void nameCaseWord() throws IOException {
+    public void testNameCaseWord() throws IOException {
         String s = "Lucene";
         final Reader reader = new StringReader(s);
 
@@ -129,7 +130,7 @@ public class OhAnalyzerTest {
     }
 
     @Test
-    public void upperCaseWord() throws IOException {
+    public void testUpperCaseWord() throws IOException {
         String s = "LUCENE";
         final Reader reader = new StringReader(s);
 
@@ -157,7 +158,7 @@ public class OhAnalyzerTest {
     }
 
     @Test
-    public void PunctuationWord() throws IOException {
+    public void testPunctuationWord() throws IOException {
         String s = "banqou's";
         final Reader reader = new StringReader(s);
 
@@ -185,7 +186,7 @@ public class OhAnalyzerTest {
     }
 
     @Test
-    public void UpperCasePunctuationWord() throws IOException {
+    public void testUpperCasePunctuationWord() throws IOException {
         String s = "Banqou's";
         final Reader reader = new StringReader(s);
 
@@ -215,7 +216,7 @@ public class OhAnalyzerTest {
 
     // TS,ts,(TS)
     @Test
-    public void brackets() throws IOException {
+    public void testBrackets() throws IOException {
         String s = "(TS)";
         final Reader reader = new StringReader(s);
 
@@ -243,7 +244,7 @@ public class OhAnalyzerTest {
     }
 
     @Test
-    public void forwardSlash() throws IOException {
+    public void testForwardSlash() throws IOException {
         String s = "S/S";
         final Reader reader = new StringReader(s);
 
