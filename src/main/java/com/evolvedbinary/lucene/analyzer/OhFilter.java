@@ -97,9 +97,10 @@ public final class OhFilter extends TokenFilter {
         // create extra terms by decomposing the term on word boundaries
         decomposePunctuationWordBoundaries(term);
 
-        // if the term starts with an upper-case character, produce a lower-case term
-        if (Character.isUpperCase(term.charAt(0))) {
-            final String lowerCaseTerm = term.toLowerCase();
+        final String lowerCaseTerm = term.toLowerCase();
+
+        // decide whether we lowercase the term or not
+        if (!term.equals(lowerCaseTerm)) {
 
             // add the lower-case term as an extra term
             extraTerms.add(lowerCaseTerm);
