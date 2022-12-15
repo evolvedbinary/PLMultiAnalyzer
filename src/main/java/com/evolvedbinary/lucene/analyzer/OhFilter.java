@@ -97,9 +97,10 @@ public final class OhFilter extends TokenFilter {
         // create extra terms by decomposing the term on word boundaries
         decomposePunctuationWordBoundaries(term);
 
+        final String lowerCaseTerm = term.toLowerCase();
+
         // decide whether we lowercase the term or not
-        if (shouldLowerCaseTerm(term)) {
-            final String lowerCaseTerm = term.toLowerCase();
+        if (!term.equals(lowerCaseTerm)) {
 
             // add the lower-case term as an extra term
             extraTerms.add(lowerCaseTerm);
@@ -160,15 +161,5 @@ public final class OhFilter extends TokenFilter {
                 }
             }
         }
-    }
-
-    private boolean shouldLowerCaseTerm(final String term) {
-        // if the term starts with an upper-case character
-        if (Character.isUpperCase(term.charAt(0))) return true;
-
-        // if the term starts with an upper-case character after parentheses
-        if(term.charAt(0) == '(' && Character.isUpperCase(term.charAt(1))) return true;
-
-        return false;
     }
 }
