@@ -91,8 +91,15 @@ public final class OhFilter extends TokenFilter {
             return false;
         }
 
-        final CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
+        CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
         final String term = termAttr.toString();
+
+        //if the term is wrapped by Quotes
+        // remove the Quotes for the token
+        if(wrapedByDoubleQuotes(term)) {
+            termAttr.setEmpty();
+            termAttr.append(term.substring(1,term.length() -1));
+        }
 
         // create extra terms by decomposing the term on word boundaries
         decomposePunctuationWordBoundaries(term);
@@ -100,7 +107,9 @@ public final class OhFilter extends TokenFilter {
         final String lowerCaseTerm = term.toLowerCase();
 
         // decide whether we lowercase the term or not
-        if (!term.equals(lowerCaseTerm)) {
+        // the decision will be based on if the term has a lowerCase char in it
+        // if the token is wrapped in double quotes we will skip this step
+        if (!term.equals(lowerCaseTerm) && !wrapedByDoubleQuotes(term)) {
 
             // add the lower-case term as an extra term
             extraTerms.add(lowerCaseTerm);
@@ -129,6 +138,15 @@ public final class OhFilter extends TokenFilter {
         //offsetAtt.setOffset(token.startOffset, token.endOffset);
 
         return true;
+    }
+
+    /**
+     * @param term
+     * @return whether or not the term is wrapped by double quotas
+     * this is used in exact term matching
+     */
+    private boolean wrapedByDoubleQuotes(String term) {
+        return term.charAt(0) == '\"' && term.charAt(0) == term.charAt(term.length() -1);
     }
 
     /**
