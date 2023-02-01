@@ -30,12 +30,12 @@ $ set EXIST_HOME=C:\your\path\to\eXist-db
 ## Copy the Jar into exist-db directory
 **Linux/macOS:**
 ```shell
-$ cp analyzer-jar.jar  $EXIST_HOME/exist-distribution/target/exist-distribution-[version]-dir/lib
+$ cp PLMultiAnalyzer-1.0.0-SNAPSHOT.jar  $EXIST_HOME/exist-distribution/target/exist-distribution-[version]-dir/lib
 ```
 
 **Windows:** 
 ```cmd
-$ copy analyzer-jar.jar  %EXIST_HOME%\exist-distribution\target\exist-distribution-[version]-dir\lib
+$ copy PLMultiAnalyzer-1.0.0-SNAPSHOT.jar  %EXIST_HOME%\exist-distribution\target\exist-distribution-[version]-dir\lib
 ```
 
 ## Add the analyzer dependency in exist start up script
@@ -48,7 +48,7 @@ in your `$EXIST_HOME/exist-distribution/target/exist-distribution-[version]-dir/
         <groupId>com.evolvedbinary.lucene.analyzer</groupId>
         <artifactId>ohAnalyzer</artifactId> 
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>analyzer-jar.jar</relativePath> <!-- must be exact match to the jar in lib folder -->
+        <relativePath>PLMultiAnalyzer-1.0.0-SNAPSHOT.jar</relativePath> <!-- must be exact match to the jar in lib folder -->
     </dependency>
     ... <!-- other dependencies -->
 <dependencies>
@@ -77,12 +77,12 @@ the `Analyzer` needs two parameters
         <!-- Lucene index is configured below -->
         <lucene>
 	        <analyzer class="com.evolvedbinary.lucene.analyzer.OhAnalyzer">
-                <param name="minimumTermLength" type="int" value="2" />
-                <param name="punctuationDictionary" type="org.apache.lucene.analysis.util.CharArraySet">
+                <param name="punctuationDictionary" type="char[]">
                     <value>'</value>
                     <value>-</value>
                     <value>’</value>
                 </param>
+                <param name="minimumTermLength" type="int" value="2" />
             <analyzer>
 	        <text qname="doc"/>
         </lucene>
