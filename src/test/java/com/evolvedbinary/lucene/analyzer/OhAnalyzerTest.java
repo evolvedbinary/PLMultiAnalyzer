@@ -272,7 +272,7 @@ public class OhAnalyzerTest {
     // when the term is encased in double quotes do not generate lowerCase token
     @Test
     public void exactMatchWhenQuoat() throws IOException {
-        String s = "\"Banquo\"";
+        String s = "`Banquo`";
         final Reader reader = new StringReader(s);
 
         final OhAnalyzer ohAnalyzer = new OhAnalyzer(PUNCTUATION_DICTIONARY, MINIMUM_TERM_LENGTH);

@@ -94,9 +94,9 @@ public final class OhFilter extends TokenFilter {
         CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
         final String term = termAttr.toString();
 
-        //if the term is wrapped by Quotes
-        // remove the Quotes for the token
-        if(wrapedByDoubleQuotes(term)) {
+        //if the term is wrapped by backticks
+        // remove the backticks for the token
+        if(wrapedByBackticks(term)) {
             termAttr.setEmpty();
             termAttr.append(term.substring(1,term.length() -1));
         }
@@ -108,8 +108,8 @@ public final class OhFilter extends TokenFilter {
 
         // decide whether we lowercase the term or not
         // the decision will be based on if the term has a lowerCase char in it
-        // if the token is wrapped in double quotes we will skip this step
-        if (!term.equals(lowerCaseTerm) && !wrapedByDoubleQuotes(term)) {
+        // if the token is wrapped in backticks we will skip this step
+        if (!term.equals(lowerCaseTerm) && !wrapedByBackticks(term)) {
 
             // add the lower-case term as an extra term
             extraTerms.add(lowerCaseTerm);
@@ -142,11 +142,11 @@ public final class OhFilter extends TokenFilter {
 
     /**
      * @param term
-     * @return whether or not the term is wrapped by double quotas
+     * @return whether or not the term is wrapped by double backticks
      * this is used in exact term matching
      */
-    private boolean wrapedByDoubleQuotes(String term) {
-        return term.charAt(0) == '\"' && term.charAt(0) == term.charAt(term.length() -1);
+    private boolean wrapedByBackticks(String term) {
+        return term.charAt(0) == '`' && term.charAt(0) == term.charAt(term.length() -1);
     }
 
     /**
