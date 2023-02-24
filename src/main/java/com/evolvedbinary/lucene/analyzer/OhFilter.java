@@ -91,7 +91,7 @@ public final class OhFilter extends TokenFilter {
             return false;
         }
 
-        CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
+        final CharTermAttribute termAttr = input.getAttribute(CharTermAttribute.class);
         final String term = termAttr.toString();
 
         //if the term is wrapped by backticks
@@ -99,6 +99,8 @@ public final class OhFilter extends TokenFilter {
         if(wrapedByBackticks(term)) {
             termAttr.setEmpty();
             termAttr.append(term.substring(1,term.length() -1));
+            posIncAtt.setPositionIncrement(1);
+            return true;
         }
 
         // create extra terms by decomposing the term on word boundaries
@@ -109,7 +111,7 @@ public final class OhFilter extends TokenFilter {
         // decide whether we lowercase the term or not
         // the decision will be based on if the term has a lowerCase char in it
         // if the token is wrapped in backticks we will skip this step
-        if (!term.equals(lowerCaseTerm) && !wrapedByBackticks(term)) {
+        if (!term.equals(lowerCaseTerm)) {
 
             // add the lower-case term as an extra term
             extraTerms.add(lowerCaseTerm);
