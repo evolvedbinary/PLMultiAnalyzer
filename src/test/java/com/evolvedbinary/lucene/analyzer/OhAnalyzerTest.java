@@ -63,7 +63,6 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(AR) need to check the other attributes like position and not just the token!
         }
 
         System.out.println();
@@ -93,7 +92,6 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
 
@@ -121,7 +119,6 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
 
@@ -149,7 +146,6 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
 
@@ -177,7 +173,6 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
 
@@ -205,11 +200,9 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
 
-        //TODO(BH) consult Tom with what should be produced here
         assertArrayEquals(new String[] { "Banqou's", "Banqou", "banqou's" , "banqou"}, tokens.toArray(new String[0]));
     }
 
@@ -235,7 +228,6 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
 
@@ -263,7 +255,6 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
         assertArrayEquals(new String[] { "S/S", "s/s" }, tokens.toArray(new String[0]));
@@ -291,7 +282,6 @@ public class OhAnalyzerTest {
 
             System.out.print("["+token+"]");
 
-            //TODO(BH) need to check the other attributes like position and not just the token!
         }
         System.out.println();
         assertArrayEquals(new String[] { "Banquo's"}, tokens.toArray(new String[0]));
